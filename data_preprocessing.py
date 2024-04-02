@@ -24,7 +24,7 @@ course = ['A', 'B', 'C']
 
 # 윈도우 사이즈와 스트라이드 설정
 window_size = 60
-stride = 60
+stride = 1
 
 '''
 ########### Time-slicing ###########
@@ -67,37 +67,37 @@ for name in name_lt:
 
 print('-----------------------------------------------------')
 
-for name in name_lt:
-    path = f'../../Autopilot/CAN_extract/{name}'
-    path_lt = glob.glob(f'{path}/2023*')
-    for idx, i in enumerate(path_lt):
-        df = pd.read_csv(i)
-        output_path = f'{path}/pp_1s_{name}_{idx+1}.csv'  # 본인 경로에 맞게 수정
+# for name in name_lt:
+#     path = f'../../Autopilot/CAN_extract/{name}'
+#     path_lt = glob.glob(f'{path}/2023*')
+#     for idx, i in enumerate(path_lt):
+#         df = pd.read_csv(i)
+#         output_path = f'{path}/pp_1s_{name}_{idx+1}.csv'  # 본인 경로에 맞게 수정
 
-        res = pd.DataFrame()
-        first_iteration = True
+#         res = pd.DataFrame()
+#         first_iteration = True
 
-        for s in signal_lt:
-            filtered_df = df[df['Signal'] == s]
-            filtered_df = filtered_df.reset_index()
+#         for s in signal_lt:
+#             filtered_df = df[df['Signal'] == s]
+#             filtered_df = filtered_df.reset_index()
 
-            filtered_df['Timestamp'] = pd.to_datetime(filtered_df['Timestamp'], format='%Y.%m.%d.%H:%M:%S.%f')
-            filtered_df['timestamp_rounded'] = filtered_df['Timestamp'].dt.round('1S')
-            filtered_df = filtered_df.drop_duplicates(subset='timestamp_rounded', keep='first')
+#             filtered_df['Timestamp'] = pd.to_datetime(filtered_df['Timestamp'], format='%Y.%m.%d.%H:%M:%S.%f')
+#             filtered_df['timestamp_rounded'] = filtered_df['Timestamp'].dt.round('1S')
+#             filtered_df = filtered_df.drop_duplicates(subset='timestamp_rounded', keep='first')
 
-            if first_iteration:
-                res['timestamp'] = filtered_df['timestamp_rounded']
-                res.set_index('timestamp', inplace=True)
-                first_iteration = False
+#             if first_iteration:
+#                 res['timestamp'] = filtered_df['timestamp_rounded']
+#                 res.set_index('timestamp', inplace=True)
+#                 first_iteration = False
 
-            res = res.merge(filtered_df[['timestamp_rounded', 'Physical_value']].set_index('timestamp_rounded'),
-                            how='left', left_index=True, right_index=True)
-            res.rename(columns={'Physical_value': s}, inplace=True)
+#             res = res.merge(filtered_df[['timestamp_rounded', 'Physical_value']].set_index('timestamp_rounded'),
+#                             how='left', left_index=True, right_index=True)
+#             res.rename(columns={'Physical_value': s}, inplace=True)
 
-        res.to_csv(output_path, index=False)
-        print(f'{name}_{idx + 1} --> Done')
+#         res.to_csv(output_path, index=False)
+#         print(f'{name}_{idx + 1} --> Done')
 
-print('-----------------------------------------------------')
+# print('-----------------------------------------------------')
 
 
 '''
@@ -381,10 +381,10 @@ for idx, name in enumerate(name_lt):
                 final_df = pd.concat([final_df, features], axis=1)
                 print(f'{name}_{c}_{idx3 + 1}_{f} --> Done')
                 
-                final_df['label'] = idx
-                final_df['course'] = idx2
-                final_df['drive_count'] = idx3
-                all_df = pd.concat([all_df, final_df])
+            final_df['label'] = idx
+            final_df['course'] = idx2
+            final_df['drive_count'] = idx3
+            all_df = pd.concat([all_df, final_df])
                     
                 # all_df.to_csv('11_CAN_window60.csv', index=False)
-all_df.to_csv('eeeee.csv', index=False)
+all_df.to_csv('3_data_result.csv', index=False)

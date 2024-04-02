@@ -371,7 +371,6 @@ for idx, name in enumerate(name_lt):
 # 
 # final_df.to_csv('3_data_accel.csv', index=False)
                     
-                ## 들여쓰기 수정 필요 ##
                 ########################################
                 features = pd.concat([features, percentile_result], axis=1)
                 features = pd.concat([features, etc_result], axis=1)
